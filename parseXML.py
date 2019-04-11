@@ -9,27 +9,27 @@ from datetime import datetime
 healthlog = "C:/Users/sk4172/Downloads/export.xml"
 
 # Open Parsed results file
-healthresults = open("AppleHealthData.txt","w")
+healthresults = open("AppleHealthData.txt", "w")
 
-#Create Header row
+# Create Header row
 healthresults.write("DateTime|Source|HealthType|HealthValue\n")
 
 # Initi counter
 count =0
 
-#Init Health type value dictionary
+# Init Health type value dictionary
 
 valdic ={}
 sourcedic ={}
 
-#determine number of lines in export.xml
+# determine number of lines in export.xml
 num_lines = sum(1 for line in open(healthlog,'r'))
 
 FMT = '%Y-%m-%d %H:%M:%S'
 
 # loop through export.eml
 for line in open(healthlog,'r'):
-    #find record types
+    # find record types
     if re.search(r"<Record type=", line):
         recordtype = re.search(r"<Record type=\"\S+\"",line)
         recordtypeval = recordtype.group()
@@ -55,25 +55,23 @@ for line in open(healthlog,'r'):
             else:
                 healthdataval = healthdata.group()
 
-        #Get end date/time of data collection
+        # Get end date/time of data collection
         datetime2 = re.search(r"endDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
         datetime2val = datetime2.group()
 
         # Output results to file
         healthresults.write(str(datetime2val[9:] + "|" + sourceNameval[12:] + "|" + recordtypeval[15:-1] + "|" + healthdataval[7:] +" \n"))
-        count = count +1
-
+        count = count + 1
 
         # print progress hash
         if count % 10000 == 0:
             print('{counts} of {nums}'.format(counts=count, nums=num_lines))
             sys.stdout.flush()
 
-#Close files
-#healthlog.close()
+# Close files
 healthresults.close()
 
-#Print values parsed
+# Print values parsed
 print("Health Values Captured")
 for key in valdic:
     print(key)
