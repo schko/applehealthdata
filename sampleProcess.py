@@ -8,8 +8,8 @@ import pandas as pd
 df = parseXML('export.xml')
 
 # select the variable of interest
-s = df[(df['date'] > '2019-01-14') & (df['date'] < '2019-01-15')]
-s = s[s['recordType']=='KQuantityTypeIdentifierHeartRate']
+s = df[(df['date'] > '2019-02-02') & (df['date'] < '2019-02-03')]
+s = s[s['recordType'] == 'HKQuantityTypeIdentifierHeartRate']
 # sorting just in case
 s = s.sort_values('date', ascending=True)
 s["val"] = pd.to_numeric(s["val"])

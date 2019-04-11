@@ -1,6 +1,6 @@
 #!/usr/bin/python
-#Simple Python script to parse Apple Health Values out of the export.xml into a pipe delimited txt file
-#Adapted from: https://github.com/kdesch5000/AppleHealthData
+# Simple Python script to parse Apple Health Values out of the export.xml into a pipe delimited txt file
+# Iniitally adapted from from: https://github.com/kdesch5000/AppleHealthData
 def parseXML(inputFile):
     import re, sys
     from datetime import datetime
@@ -34,9 +34,9 @@ def parseXML(inputFile):
             # Get value of record type
             healthdata = re.search(r"value\S\S\w+",line)
             if healthdata is not None:
-                if recordtypeval[15:-1] == "KCategoryTypeIdentifierSleepAnalysis":
-                    starttime = re.search(r"startDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
-                    endtime = re.search(r"endDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
+                if recordtypeval[14:-1] == "HKCategoryTypeIdentifierSleepAnalysis":
+                    starttime = re.search(r"startDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+", line)
+                    endtime = re.search(r"endDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+", line)
                     tdelta = datetime.strptime(endtime.group()[9:], FMT) - datetime.strptime(starttime.group()[11:], FMT)
                     healthdataval = "0000000" + str(tdelta)[:1]
                 else:
@@ -49,7 +49,7 @@ def parseXML(inputFile):
             # save results to dictionary
             datadict['date'].append(datetime2val[9:])
             datadict['source'].append(sourceNameval[12:])
-            datadict['recordType'].append(recordtypeval[15:-1])
+            datadict['recordType'].append(recordtypeval[14:-1])
             datadict['val'].append(healthdataval[7:])
             count = count + 1
             # print progress hash
