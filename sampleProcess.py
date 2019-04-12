@@ -9,7 +9,7 @@ import pandas as pd
 df = parseXML('export.xml')
 
 # select the variable of interest
-s = df[(df['date'] > '2019-02-02') & (df['date'] < '2019-02-03')]
+s = df[(df['date'] > '2019-03-03') & (df['date'] < '2019-03-04')]
 s = s[s['recordType'] == 'HKQuantityTypeIdentifierHeartRate']
 
 # sorting just in case
