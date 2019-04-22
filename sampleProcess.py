@@ -6,6 +6,7 @@ import traces
 import pandas as pd
 import numpy as np
 import datetime
+import tensorflow
 
 def hrconvert(df, dateFrom, dateTo):
     # select the variable of interest
@@ -22,25 +23,58 @@ def hrconvert(df, dateFrom, dateTo):
         time_series[pd.to_datetime(s['date'].iloc[i])] = s['val'].iloc[i]
     # to account for the unevenness of HR data, we use a moving average to "fill in the gaps" in HR
     regular = time_series.moving_average(60, pandas=True)
-    return (regular.keys().values, regular.values) # return the x, y
+    print(np.mean(regular.values[450:]))
+    return (regular.keys().values[450:], regular.values[450:]) # return the x, y
+
+def plotPoints(x1, y1, axis, fillX = 0):
+    # plot
+    convertedTime = list(map(timeextract, x1))
+    axis.plot(convertedTime, y1)
+
 
 # read in xml data and get dataframe
 df = parseXML('export.xml')
 
 # extract time
 timeextract = lambda x: datetime.datetime.utcfromtimestamp((x - np.datetime64('1970-01-01T00:00:00Z'))
-                                                           / np.timedelta64(1, 's'))
+                                                           / np.timedelta64(1, 's')).hour * 3600 + datetime.datetime.utcfromtimestamp((x - np.datetime64('1970-01-01T00:00:00Z'))
+                                                           / np.timedelta64(1, 's')).minute * 60 + datetime.datetime.utcfromtimestamp((x - np.datetime64('1970-01-01T00:00:00Z'))
+                                                           / np.timedelta64(1, 's')).second
+
+
+fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, sharex=True)
+# get 03-03 data
+print('2019-04-10')
+(x1, y1) = hrconvert(df, '2019-04-10', '2019-04-11')
+plotPoints(x1, y1, ax1, 60000)
+(x1, y1) = hrconvert(df, '2019-04-17', '2019-04-18')
+plotPoints(x1, y1, ax1, 60000)
+
+print('2019-04-11')
+(x1, y1) = hrconvert(df, '2019-04-11', '2019-04-12')
+plotPoints(x1, y1, ax2, 60000)
+(x1, y1) = hrconvert(df, '2019-04-18', '2019-04-19')
+plotPoints(x1, y1, ax2, 60000)
 
 # get 03-03 data
-(x1, y1) = hrconvert(df, '2019-03-03', '2019-03-04')
+print('2019-04-12')
+(x1, y1) = hrconvert(df, '2019-04-12', '2019-04-13')
+plotPoints(x1, y1, ax3, 60000)
+(x1, y1) = hrconvert(df, '2019-04-19', '2019-04-20')
+plotPoints(x1, y1, ax3, 60000)
 
-# plot
-plt.plot(list(map(timeextract, x1)), y1)
-# get 02-24 data
-(x1, y1) = hrconvert(df, '2019-03-10', '2019-03-11')
-# overlay plot
-plt.plot(list(map(timeextract, x1)), y1)
+print('2019-04-13')
+(x1, y1) = hrconvert(df, '2019-04-13', '2019-04-14')
+plotPoints(x1, y1, ax4, 60000)
+(x1, y1) = hrconvert(df, '2019-04-20', '2019-04-21')
+plotPoints(x1, y1, ax4, 60000)
+
+# get 03-03 data
+print('2019-04-14')
+(x1, y1) = hrconvert(df, '2019-04-14', '2019-04-15')
+plotPoints(x1, y1, ax5, 60000)
+(x1, y1) = hrconvert(df, '2019-04-21', '2019-04-22')
+plotPoints(x1, y1, ax5, 60000)
 
 plt.xticks(rotation='vertical')
 plt.show()
-
