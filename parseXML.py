@@ -23,8 +23,11 @@ def parseXML(inputFile):
     # loop through export.eml
     for line in open(healthlog,'r'):
         # find record types
-        if re.search(r"<Record type=", line):
-            recordtype = re.search(r"<Record type=\"\S+\"",line)
+        if re.search(r"<Record type=", line) or re.search(r"<Workout workoutActivityType=", line):
+            if re.search(r"<Record type=", line):
+                recordtype = re.search(r"<Record type=\"\S+\"",line)
+            else:
+                recordtype = re.search(r"<Workout workoutActivityType=\"\S+\"", line)
             recordtypeval = recordtype.group()
 
             # get source of value
@@ -49,7 +52,10 @@ def parseXML(inputFile):
             # save results to dictionary
             datadict['date'].append(datetime2val[9:])
             datadict['source'].append(sourceNameval[12:])
-            datadict['recordType'].append(recordtypeval[14:-1])
+            if re.search(r"<Record type=", line):
+                datadict['recordType'].append(recordtypeval[14:-1])
+            else:
+                datadict['recordType'].append(recordtypeval[30:-1])
             datadict['val'].append(healthdataval[7:])
             count = count + 1
             # print progress hash

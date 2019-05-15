@@ -11,6 +11,8 @@ import tensorflow
 def hrconvert(df, dateFrom, dateTo):
     # select the variable of interest
     s = df[(df['date'] > dateFrom) & (df['date'] < dateTo)]
+    if dateFrom == '2019-04-18':
+        s.to_excel("output.xlsx")
     s = s[s['recordType'] == 'HKQuantityTypeIdentifierHeartRate']
 
     # sorting just in case
@@ -23,8 +25,8 @@ def hrconvert(df, dateFrom, dateTo):
         time_series[pd.to_datetime(s['date'].iloc[i])] = s['val'].iloc[i]
     # to account for the unevenness of HR data, we use a moving average to "fill in the gaps" in HR
     regular = time_series.moving_average(60, pandas=True)
-    print(np.mean(regular.values[450:]))
-    return (regular.keys().values[450:], regular.values[450:]) # return the x, y
+    print(np.mean(regular.values[int(25200/60):]))
+    return (regular.keys().values[int(25200/60):], regular.values[int(25200/60):]) # return the x, y
 
 def plotPoints(x1, y1, axis, fillX = 0):
     # plot
@@ -62,6 +64,8 @@ print('2019-04-12')
 plotPoints(x1, y1, ax3, 60000)
 (x1, y1) = hrconvert(df, '2019-04-19', '2019-04-20')
 plotPoints(x1, y1, ax3, 60000)
+
+plt.xticks(rotation='vertical')
 
 print('2019-04-13')
 (x1, y1) = hrconvert(df, '2019-04-13', '2019-04-14')
