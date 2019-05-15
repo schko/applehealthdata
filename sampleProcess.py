@@ -26,7 +26,7 @@ def hrconvert(df, dateFrom, dateTo):
     # to account for the unevenness of HR data, we use a moving average to "fill in the gaps" in HR
     regular = time_series.moving_average(60, pandas=True)
     print(np.mean(regular.values[int(25200/60):]))
-    return (regular.keys().values[int(25200/60):], regular.values[int(25200/60):]) # return the x, y
+    return (regular.keys().values[int(25200/60):], regular.values[int(25200/60):], s) # return the x, y
 
 def plotPoints(x1, y1, axis, fillX = 0):
     # plot
@@ -46,38 +46,49 @@ timeextract = lambda x: datetime.datetime.utcfromtimestamp((x - np.datetime64('1
 
 fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3, 2, sharex=True)
 # get 03-03 data
+baselinecsv = pd.DataFrame()
 print('2019-04-10')
-(x1, y1) = hrconvert(df, '2019-04-10', '2019-04-11')
+(x1, y1, dfout) = hrconvert(df, '2019-04-10', '2019-04-11')
+baselinecsv.append(dfout)
+
 plotPoints(x1, y1, ax1, 60000)
-(x1, y1) = hrconvert(df, '2019-04-17', '2019-04-18')
+(x1, y1, dfout) = hrconvert(df, '2019-04-17', '2019-04-18')
 plotPoints(x1, y1, ax1, 60000)
 
 print('2019-04-11')
-(x1, y1) = hrconvert(df, '2019-04-11', '2019-04-12')
+(x1, y1, dfout) = hrconvert(df, '2019-04-11', '2019-04-12')
+baselinecsv.append(dfout)
+
 plotPoints(x1, y1, ax2, 60000)
-(x1, y1) = hrconvert(df, '2019-04-18', '2019-04-19')
+(x1, y1, dfout) = hrconvert(df, '2019-04-18', '2019-04-19')
 plotPoints(x1, y1, ax2, 60000)
 
 # get 03-03 data
 print('2019-04-12')
-(x1, y1) = hrconvert(df, '2019-04-12', '2019-04-13')
+(x1, y1, dfout) = hrconvert(df, '2019-04-12', '2019-04-13')
+baselinecsv.append(dfout)
+
 plotPoints(x1, y1, ax3, 60000)
-(x1, y1) = hrconvert(df, '2019-04-19', '2019-04-20')
+(x1, y1, dfout) = hrconvert(df, '2019-04-19', '2019-04-20')
 plotPoints(x1, y1, ax3, 60000)
 
 plt.xticks(rotation='vertical')
 
 print('2019-04-13')
-(x1, y1) = hrconvert(df, '2019-04-13', '2019-04-14')
+(x1, y1, dfout) = hrconvert(df, '2019-04-13', '2019-04-14')
+baselinecsv.append(dfout)
+
 plotPoints(x1, y1, ax4, 60000)
-(x1, y1) = hrconvert(df, '2019-04-20', '2019-04-21')
+(x1, y1, dfout) = hrconvert(df, '2019-04-20', '2019-04-21')
 plotPoints(x1, y1, ax4, 60000)
 
 # get 03-03 data
 print('2019-04-14')
-(x1, y1) = hrconvert(df, '2019-04-14', '2019-04-15')
+(x1, y1, dfout) = hrconvert(df, '2019-04-14', '2019-04-15')
+baselinecsv.append(dfout)
+
 plotPoints(x1, y1, ax5, 60000)
-(x1, y1) = hrconvert(df, '2019-04-21', '2019-04-22')
+(x1, y1, dfout) = hrconvert(df, '2019-04-21', '2019-04-22')
 plotPoints(x1, y1, ax5, 60000)
 
 plt.xticks(rotation='vertical')
