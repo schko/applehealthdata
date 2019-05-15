@@ -10,19 +10,19 @@ import tensorflow
 
 def hrconvert(df, dateFrom, dateTo):
     # select the variable of interest
-    s = df[(df['date'] > dateFrom) & (df['date'] < dateTo)]
-    if dateFrom == '2019-04-18':
-        s.to_excel("output.xlsx")
+    s = df[(df['endDate'] > dateFrom) & (df['endDate'] < dateTo)]
+    if dateFrom == '2019-04-21':
+        s.to_csv("output.csv")
     s = s[s['recordType'] == 'HKQuantityTypeIdentifierHeartRate']
 
     # sorting just in case
-    s = s.sort_values('date', ascending=True)
+    s = s.sort_values('endDate', ascending=True)
     s["val"] = pd.to_numeric(s["val"])
 
     # accounts for uneven time series
     time_series = traces.TimeSeries()
     for i in range(len(s)):
-        time_series[pd.to_datetime(s['date'].iloc[i])] = s['val'].iloc[i]
+        time_series[pd.to_datetime(s['endDate'].iloc[i])] = s['val'].iloc[i]
     # to account for the unevenness of HR data, we use a moving average to "fill in the gaps" in HR
     regular = time_series.moving_average(60, pandas=True)
     print(np.mean(regular.values[int(25200/60):]))
