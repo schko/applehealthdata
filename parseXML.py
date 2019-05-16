@@ -49,8 +49,8 @@ def parseXML(inputFile):
                         healthdataval = re.search(r"value\S\S[+-]?([0-9]*[.])?[0-9]+", line).group()
                 else:
                     healthdataval = healthdata.group()
-            elif recordtypeval[30:-1] == "HKWorkoutActivityTypeRunning":
-                healthdataval = re.search(r"duration\S\S[+-]?([0-9]*[.])?[0-9]+", line).group()[len("duration"):]
+            elif recordtypeval[30:-1] == "HKWorkoutActivityTypeRunning" or recordtypeval[30:-1] == "HKWorkoutActivityTypeWalking":
+                healthdataval = re.search(r"totalDistance\S\S[+-]?([0-9]*[.])?[0-9]+", line).group()[len("totalDistance"):]
 
             # Get end date/time of data collection
             datetime2 = re.search(r"startDate\S\S\d+\-\d+\-\d+\s+\d+\:\d+\:\d+",line)
@@ -76,7 +76,10 @@ def parseXML(inputFile):
             if re.search(r"unit\S+", line) is not None:
                 datadict['unit'].append(re.search(r"unit\S+", line).group()[len("unit")+2:-1])
             else:
-                datadict['unit'].append("NA")
+                if recordtypeval[30:-1] == "HKWorkoutActivityTypeRunning" or recordtypeval[30:-1] == "HKWorkoutActivityTypeWalking":
+                    datadict['unit'].append(re.search(r"totalDistanceUnit\S+", line).group()[len('totalDistanceUnit')+2:-1])
+                else:
+                    datadict['unit'].append("NA")
             count = count + 1
             # print progress hash
             if count % 10000 == 0:
